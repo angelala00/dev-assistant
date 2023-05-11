@@ -1,5 +1,6 @@
 package com.example.helloplugin.openai;
 
+import com.example.helloplugin.setting.DevAssistantSettings;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.http.HttpEntity;
@@ -17,34 +18,36 @@ import java.util.ArrayList;
 public class OpenaiTool {
 
     public String chatCompletions(ArrayList<MessageItem> messageItems) {
-        System.setProperty("http.proxyHost", "127.0.0.1");
-        System.setProperty("http.proxyPort", "1087");
-        System.setProperty("https.proxyHost", "127.0.0.1");
-        System.setProperty("https.proxyPort", "1087");
 
         int connectionTimeout = 15000; // 连接超时时间（毫秒）
         int requestTimeout = 15000;    // 请求超时时间（毫秒）
         int socketTimeout = 15000;     // 套接字超时时间（毫秒）
 
-        String proxyHost = "127.0.0.1";
-        int proxyPort = 1087;
-        HttpHost proxy = new HttpHost(proxyHost, proxyPort);
+        String proxyHost = DevAssistantSettings.getInstance().proxyHost;
+        int proxyPort = DevAssistantSettings.getInstance().proxyPort;
 
-        RequestConfig requestConfig = RequestConfig.custom()
+        RequestConfig.Builder requestConfigBuilder = RequestConfig.custom()
                 .setConnectTimeout(connectionTimeout)
                 .setConnectionRequestTimeout(requestTimeout)
-                .setSocketTimeout(socketTimeout)
-                .setProxy(proxy) // 设置代理服务器
-                .build();
+                .setSocketTimeout(socketTimeout);
+        // 如果 proxyHost 不为空且 proxyPort 大于 0，则设置代理服务器
+        if (proxyHost != null && !proxyHost.isEmpty() && proxyPort > 0) {
+            HttpHost proxy = new HttpHost(proxyHost, proxyPort);
+            requestConfigBuilder.setProxy(proxy);
+        }
 
-        String url = "https://api.openai.com/v1/chat/completions";
+        RequestConfig requestConfig = requestConfigBuilder.build();
 
+        String url = DevAssistantSettings.getInstance().serverUrl + "/v1/chat/completions";
         CloseableHttpClient httpClient = HttpClients.custom()
                 .setDefaultRequestConfig(requestConfig)
                 .build();
         try {
+            String apiKey = DevAssistantSettings.getInstance().personalApiKey;
             HttpPost httpPost = new HttpPost(url);
-            httpPost.setHeader("Authorization", "Bearer ***");
+            if (apiKey != null && !apiKey.isEmpty()) {
+                httpPost.setHeader("Authorization", "Bearer " + apiKey);
+            }
             httpPost.setHeader("Content-Type", "application/json");
 
             // 创建 RequestBody 对象

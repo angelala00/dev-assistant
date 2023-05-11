@@ -27,6 +27,7 @@
     <extensions defaultExtensionNs="com.intellij">
         <toolWindow factoryClass="com.example.helloplugin.MyDefaultToolWindowFactory" id="DevAssistant" anchor="right"/>
         <applicationConfigurable id="devAssistantSettings" parentId="tools" displayName="DevAssistant" instance="com.example.helloplugin.setting.DevAssistantSettingsPane" />
+        <applicationService serviceImplementation="com.example.helloplugin.setting.DevAssistantSettings"/>
     </extensions>
     <actions>
         <group id="DevAssistantEditorPopup">
