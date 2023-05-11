@@ -14,7 +14,7 @@ public class MyPluginAction1 extends AnAction {
         // 获取 ToolWindowManager 实例
         ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
         // 获取你的 ToolWindow
-        ToolWindow toolWindow = toolWindowManager.getToolWindow("GptPlugin");
+        ToolWindow toolWindow = toolWindowManager.getToolWindow("DevAssistant");
         // 打开 ToolWindow
         toolWindow.show();
         // 在此处执行其他操作

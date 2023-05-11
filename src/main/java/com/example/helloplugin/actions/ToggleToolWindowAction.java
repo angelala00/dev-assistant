@@ -17,7 +17,7 @@ public class ToggleToolWindowAction extends AnAction {
 
         // 获取ToolWindow
         ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
-        ToolWindow toolWindow = toolWindowManager.getToolWindow("GptPlugin");
+        ToolWindow toolWindow = toolWindowManager.getToolWindow("DevAssistant");
 
         if (toolWindow == null) {
             return;
