@@ -16,6 +16,7 @@ public class DevAssistantSettingsPane implements SearchableConfigurable {
     private JTextField personalApiKeyField;
     private JTextField proxyHostField;
     private JTextField proxyPortField;
+    private JTextField modelField;
 
     public DevAssistantSettingsPane() {
         panel = new JPanel(new GridBagLayout());
@@ -25,6 +26,7 @@ public class DevAssistantSettingsPane implements SearchableConfigurable {
         personalApiKeyField = new JTextField(20);
         proxyHostField = new JTextField(20);
         proxyPortField = new JTextField(20);
+        modelField = new JTextField(20);
 
         c.anchor = GridBagConstraints.WEST;
         c.gridx = 0;
@@ -54,6 +56,13 @@ public class DevAssistantSettingsPane implements SearchableConfigurable {
 
         c.gridx = 1;
         panel.add(proxyPortField, c);
+
+        c.gridx = 0;
+        c.gridy = 4;
+        panel.add(new JLabel("Model:"), c);
+
+        c.gridx = 1;
+        panel.add(modelField, c);
     }
 
     @Nls(capitalization = Nls.Capitalization.Title)
@@ -83,7 +92,9 @@ public class DevAssistantSettingsPane implements SearchableConfigurable {
         return !(serverUrlField.getText().equals(settings.serverUrl)&&
                 personalApiKeyField.getText().equals(settings.personalApiKey)&&
                 proxyHostField.getText().equals(settings.proxyHost)&&
-                proxyPortField.getText().equals(Integer.toString(settings.proxyPort)));
+                proxyPortField.getText().equals(Integer.toString(settings.proxyPort))&&
+                modelField.getText().equals(settings.model)
+        );
     }
 
     @Override
@@ -93,6 +104,7 @@ public class DevAssistantSettingsPane implements SearchableConfigurable {
         settings.personalApiKey = personalApiKeyField.getText();
         settings.proxyHost = proxyHostField.getText();
         settings.proxyPort = Integer.parseInt(proxyPortField.getText());
+        settings.model = modelField.getText();
     }
 
     @Override
@@ -102,6 +114,7 @@ public class DevAssistantSettingsPane implements SearchableConfigurable {
         personalApiKeyField.setText(settings.personalApiKey);
         proxyHostField.setText(settings.proxyHost);
         proxyPortField.setText(Integer.toString(settings.proxyPort));
+        modelField.setText(settings.model);
     }
 
     @Override

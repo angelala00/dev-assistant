@@ -13,6 +13,7 @@ public class DevAssistantSettings implements PersistentStateComponent<DevAssista
     public String personalApiKey = "";
     public String proxyHost = "";
     public int proxyPort = 0;
+    public String model = "gpt-3.5-turbo";
 
     public static DevAssistantSettings getInstance() {
         return ApplicationManager.getApplication().getService(DevAssistantSettings.class);
@@ -30,5 +31,6 @@ public class DevAssistantSettings implements PersistentStateComponent<DevAssista
         this.personalApiKey = state.personalApiKey;
         this.proxyHost = state.proxyHost;
         this.proxyPort = state.proxyPort;
+        this.model = state.model;
     }
 }

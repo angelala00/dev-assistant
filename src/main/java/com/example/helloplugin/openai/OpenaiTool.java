@@ -12,7 +12,9 @@ import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+ import org.apache.http.util.EntityUtils;
 
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
 public class OpenaiTool {
@@ -25,6 +27,7 @@ public class OpenaiTool {
 
         String proxyHost = DevAssistantSettings.getInstance().proxyHost;
         int proxyPort = DevAssistantSettings.getInstance().proxyPort;
+        String model = DevAssistantSettings.getInstance().model;
 
         RequestConfig.Builder requestConfigBuilder = RequestConfig.custom()
                 .setConnectTimeout(connectionTimeout)
@@ -42,21 +45,18 @@ public class OpenaiTool {
         CloseableHttpClient httpClient = HttpClients.custom()
                 .setDefaultRequestConfig(requestConfig)
                 .build();
+        String apiKey = DevAssistantSettings.getInstance().personalApiKey;
+        HttpPost httpPost = new HttpPost(url);
+        if (apiKey != null && !apiKey.isEmpty()) {
+            httpPost.setHeader("Authorization", "Bearer " + apiKey);
+        }
+        httpPost.setHeader("Content-Type", "application/json");
+        // 创建 RequestBody 对象
+        RequestBody requestBody = new RequestBody(model, messageItems);
+        // 将 RequestBody 转换为 JSON 字符串
+        ObjectMapper mapper = new ObjectMapper();
         try {
-            String apiKey = DevAssistantSettings.getInstance().personalApiKey;
-            HttpPost httpPost = new HttpPost(url);
-            if (apiKey != null && !apiKey.isEmpty()) {
-                httpPost.setHeader("Authorization", "Bearer " + apiKey);
-            }
-            httpPost.setHeader("Content-Type", "application/json");
-
-            // 创建 RequestBody 对象
-            RequestBody requestBody = new RequestBody("gpt-3.5-turbo", messageItems);
-
-            // 将 RequestBody 转换为 JSON 字符串
-            ObjectMapper mapper = new ObjectMapper();
             String requestBodyString = mapper.writeValueAsString(requestBody);
-
             System.out.println("requestBody:" + requestBodyString);
             // 创建 StringEntity 对象
             StringEntity requestEntity = new StringEntity(requestBodyString, ContentType.APPLICATION_JSON);
@@ -65,21 +65,28 @@ public class OpenaiTool {
             CloseableHttpResponse response = httpClient.execute(httpPost);
             HttpEntity entity = response.getEntity();
             if (entity != null) {
-                ObjectMapper objectMapper = new ObjectMapper();
-                JsonNode rootNode = objectMapper.readTree(entity.getContent());
-                // 在这里解析JSON响应内容
-                System.out.println("Response all content: " + entity);
+                String entityContents = EntityUtils.toString(entity, StandardCharsets.UTF_8);
+                // 打印出原始的响应内容
+                System.out.println("Response all content: " + entityContents);
 
-                JsonNode messageNode = rootNode.path("choices").get(0).path("message");
-                String content = messageNode.path("content").asText();
-                System.out.println("Response content: " + content);
-                response.close();
-                httpClient.close();
-                return content;
+                // 使用字符串来解析Json数据
+                ObjectMapper objectMapper = new ObjectMapper();
+                JsonNode rootNode = objectMapper.readTree(entityContents);
+
+                JsonNode error = rootNode.path("error");
+                if (error != null && !error.isEmpty()) {
+                    System.out.println("error: " + error);
+                } else {
+                    JsonNode messageNode = rootNode.path("choices").get(0).path("message");
+                    String content = messageNode.path("content").asText();
+                    System.out.println("Response content: " + content);
+                    response.close();
+                    httpClient.close();
+                    return content;
+                }
             }
             response.close();
             httpClient.close();
-            return "{}";
         } catch (Exception e) {
             e.printStackTrace();
         }

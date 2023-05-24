@@ -25,7 +25,6 @@ public class MyDefaultToolWindowFactory implements ToolWindowFactory {
     private JTextArea chatContentArea;
     private JTextField inputTextField;
     private JButton sendButton;
-    //    private Map<String, String> sessionChatMap;
     private Map<String, ArrayList<MessageItem>> sessionChatMap;
     private ActionMethod actionMethod;
 
