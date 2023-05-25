@@ -11,8 +11,12 @@ public class RequestBody {
     @JsonProperty("messages")
     private List<MessageItem> messages;
 
-    public RequestBody(String model, List<MessageItem> messages) {
+    @JsonProperty("stream")
+    private boolean stream;
+
+    public RequestBody(String model, List<MessageItem> messages, boolean stream) {
         this.model = model;
         this.messages = messages;
+        this.stream = stream;
     }
 }

@@ -42,11 +42,13 @@ public class ActionMethod {
         // 禁用发送按钮和输入框的回车功能
         sendButton.setEnabled(false);
         // 使用 CompletableFuture 异步调用接口
-        CompletableFuture.supplyAsync(() -> openaiTool.chatCompletions(sessionChatMap.get(selectedSession)), executorService).thenAccept(response -> {
+        CompletableFuture.supplyAsync(() -> openaiTool.chatCompletions(sessionChatMap.get(selectedSession),chatContentArea), executorService).thenAccept(response -> {
             // 将接收到的响应添加到聊天内容区域
             SwingUtilities.invokeLater(() -> {
                 MessageItem item2 = new MessageItem("assistant", response);
-                updateSessionWithMessageItem(selectedSession, chatContentArea, item2, sessionChatMap);
+                sessionChatMap.get(selectedSession).add(item2);
+
+//                updateSessionWithMessageItem(selectedSession, chatContentArea, item2, sessionChatMap);
                 // 启用发送按钮和输入框的回车功能
                 sendButton.setEnabled(true);
             });
@@ -64,7 +66,7 @@ public class ActionMethod {
     }
 
     public String renderSingleMessageItem(MessageItem messageItem) {
-        return "\n" + messageItem.getRole() + ":::===:::" + messageItem.getContent();
+        return "\n" + messageItem.getRole() + ":\n" + messageItem.getContent();
     }
 }
 

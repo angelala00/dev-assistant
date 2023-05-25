@@ -17,6 +17,9 @@ public class DevAssistantSettingsPane implements SearchableConfigurable {
     private JTextField proxyHostField;
     private JTextField proxyPortField;
     private JTextField modelField;
+    private JTextField connectionTimeoutField;
+    private JTextField requestTimeoutField;
+    private JTextField socketTimeoutField;
 
     public DevAssistantSettingsPane() {
         panel = new JPanel(new GridBagLayout());
@@ -27,6 +30,9 @@ public class DevAssistantSettingsPane implements SearchableConfigurable {
         proxyHostField = new JTextField(20);
         proxyPortField = new JTextField(20);
         modelField = new JTextField(20);
+        connectionTimeoutField = new JTextField(20);
+        requestTimeoutField = new JTextField(20);
+        socketTimeoutField = new JTextField(20);
 
         c.anchor = GridBagConstraints.WEST;
         c.gridx = 0;
@@ -63,6 +69,27 @@ public class DevAssistantSettingsPane implements SearchableConfigurable {
 
         c.gridx = 1;
         panel.add(modelField, c);
+
+        c.gridx = 0;
+        c.gridy = 5;
+        panel.add(new JLabel("connectionTimeout:"), c);
+
+        c.gridx = 1;
+        panel.add(connectionTimeoutField, c);
+
+        c.gridx = 0;
+        c.gridy = 6;
+        panel.add(new JLabel("requestTimeout:"), c);
+
+        c.gridx = 1;
+        panel.add(requestTimeoutField, c);
+
+        c.gridx = 0;
+        c.gridy = 7;
+        panel.add(new JLabel("socketTimeout:"), c);
+
+        c.gridx = 1;
+        panel.add(socketTimeoutField, c);
     }
 
     @Nls(capitalization = Nls.Capitalization.Title)
@@ -93,7 +120,10 @@ public class DevAssistantSettingsPane implements SearchableConfigurable {
                 personalApiKeyField.getText().equals(settings.personalApiKey)&&
                 proxyHostField.getText().equals(settings.proxyHost)&&
                 proxyPortField.getText().equals(Integer.toString(settings.proxyPort))&&
-                modelField.getText().equals(settings.model)
+                modelField.getText().equals(settings.model)&&
+                connectionTimeoutField.getText().equals(settings.connectionTimeout)&&
+                requestTimeoutField.getText().equals(settings.requestTimeout)&&
+                socketTimeoutField.getText().equals(settings.socketTimeout)
         );
     }
 
@@ -105,6 +135,9 @@ public class DevAssistantSettingsPane implements SearchableConfigurable {
         settings.proxyHost = proxyHostField.getText();
         settings.proxyPort = Integer.parseInt(proxyPortField.getText());
         settings.model = modelField.getText();
+        settings.connectionTimeout = Integer.parseInt(connectionTimeoutField.getText());
+        settings.requestTimeout = Integer.parseInt(requestTimeoutField.getText());
+        settings.socketTimeout = Integer.parseInt(socketTimeoutField.getText());
     }
 
     @Override
@@ -115,6 +148,9 @@ public class DevAssistantSettingsPane implements SearchableConfigurable {
         proxyHostField.setText(settings.proxyHost);
         proxyPortField.setText(Integer.toString(settings.proxyPort));
         modelField.setText(settings.model);
+        connectionTimeoutField.setText(Integer.toString(settings.connectionTimeout));
+        requestTimeoutField.setText(Integer.toString(settings.requestTimeout));
+        socketTimeoutField.setText(Integer.toString(settings.socketTimeout));
     }
 
     @Override

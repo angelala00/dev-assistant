@@ -14,6 +14,9 @@ public class DevAssistantSettings implements PersistentStateComponent<DevAssista
     public String proxyHost = "";
     public int proxyPort = 0;
     public String model = "gpt-3.5-turbo";
+    public int connectionTimeout = 15000; // 连接超时时间（毫秒）
+    public int requestTimeout = 15000;    // 请求超时时间（毫秒）
+    public int socketTimeout = 15000;     // 套接字超时时间（毫秒）
 
     public static DevAssistantSettings getInstance() {
         return ApplicationManager.getApplication().getService(DevAssistantSettings.class);
@@ -32,5 +35,8 @@ public class DevAssistantSettings implements PersistentStateComponent<DevAssista
         this.proxyHost = state.proxyHost;
         this.proxyPort = state.proxyPort;
         this.model = state.model;
+        this.connectionTimeout = state.connectionTimeout;
+        this.requestTimeout = state.requestTimeout;
+        this.socketTimeout = state.socketTimeout;
     }
 }

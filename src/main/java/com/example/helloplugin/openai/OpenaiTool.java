@@ -14,16 +14,21 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
  import org.apache.http.util.EntityUtils;
 
+import javax.swing.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
 public class OpenaiTool {
 
-    public String chatCompletions(ArrayList<MessageItem> messageItems) {
+    public String chatCompletions(ArrayList<MessageItem> messageItems, JTextArea chatContentArea) {
 
-        int connectionTimeout = 15000; // 连接超时时间（毫秒）
-        int requestTimeout = 15000;    // 请求超时时间（毫秒）
-        int socketTimeout = 15000;     // 套接字超时时间（毫秒）
+        int connectionTimeout = DevAssistantSettings.getInstance().connectionTimeout; // 连接超时时间（毫秒）
+        int requestTimeout = DevAssistantSettings.getInstance().requestTimeout;    // 请求超时时间（毫秒）
+        int socketTimeout = DevAssistantSettings.getInstance().socketTimeout;     // 套接字超时时间（毫秒）
 
         String proxyHost = DevAssistantSettings.getInstance().proxyHost;
         int proxyPort = DevAssistantSettings.getInstance().proxyPort;
@@ -52,9 +57,10 @@ public class OpenaiTool {
         }
         httpPost.setHeader("Content-Type", "application/json");
         // 创建 RequestBody 对象
-        RequestBody requestBody = new RequestBody(model, messageItems);
+        RequestBody requestBody = new RequestBody(model, messageItems, true);
         // 将 RequestBody 转换为 JSON 字符串
         ObjectMapper mapper = new ObjectMapper();
+        String content = "";
         try {
             String requestBodyString = mapper.writeValueAsString(requestBody);
             System.out.println("requestBody:" + requestBodyString);
@@ -65,28 +71,86 @@ public class OpenaiTool {
             CloseableHttpResponse response = httpClient.execute(httpPost);
             HttpEntity entity = response.getEntity();
             if (entity != null) {
-                String entityContents = EntityUtils.toString(entity, StandardCharsets.UTF_8);
-                // 打印出原始的响应内容
-                System.out.println("Response all content: " + entityContents);
 
-                // 使用字符串来解析Json数据
-                ObjectMapper objectMapper = new ObjectMapper();
-                JsonNode rootNode = objectMapper.readTree(entityContents);
+                if (response.getHeaders("Content-Type")[0].getValue().equals("text/event-stream")){
+                    System.out.println("ok:");
 
-                JsonNode error = rootNode.path("error");
-                if (error != null && !error.isEmpty()) {
-                    System.out.println("error: " + error);
+
+
+                    InputStream inputStream = entity.getContent();
+                    try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream))) {
+                        String line;
+                        chatContentArea.append("\nassistant:\n");
+                        while ((line = bufferedReader.readLine()) != null) {
+//                    System.out.println("::"+line); // 打印每一行数据。你可以将这部分替换为你自己的处理代码。
+                            line = line.replace("data:","").trim();
+                            if (line != null && line != "" && line.startsWith("{")){
+                                ObjectMapper objectMapper = new ObjectMapper();
+                                JsonNode rootNode = objectMapper.readTree(line);
+                                JsonNode delta = rootNode.path("choices").get(0).path("delta");
+                                if (delta != null && delta.path("content")!=null && !delta.path("content").asText().equals("")){
+                                    String text = delta.path("content").asText();
+//                                    System.out.print(delta.path("content").asText());
+
+                                    content=content+text;
+
+//                                    SwingUtilities.invokeLater(() -> {
+                                        chatContentArea.append(text);
+//                                    });
+
+
+
+
+                                }
+                            }
+                        }
+                    } catch(IOException e) {
+                        // 处理可能发生的读取错误
+                        e.printStackTrace();
+                    } finally {
+                        inputStream.close(); // 确保在结束后关闭 InputStream
+                    }
+
+
+
+
+
+
                 } else {
-                    JsonNode messageNode = rootNode.path("choices").get(0).path("message");
-                    String content = messageNode.path("content").asText();
-                    System.out.println("Response content: " + content);
-                    response.close();
-                    httpClient.close();
-                    return content;
+                    System.out.println("err:");
+                    String entityContents = EntityUtils.toString(entity, StandardCharsets.UTF_8);
+                    // 打印出原始的响应内容
+                    System.out.println("Response all content: " + entityContents);
+
                 }
+
+
+
+
+
+//                String entityContents = EntityUtils.toString(entity, StandardCharsets.UTF_8);
+//                // 打印出原始的响应内容
+//                System.out.println("Response all content: " + entityContents);
+//
+//                // 使用字符串来解析Json数据
+//                ObjectMapper objectMapper = new ObjectMapper();
+//                JsonNode rootNode = objectMapper.readTree(entityContents);
+//
+//                JsonNode error = rootNode.path("error");
+//                if (error != null && !error.isEmpty()) {
+//                    System.out.println("error: " + error);
+//                } else {
+//                    JsonNode messageNode = rootNode.path("choices").get(0).path("message");
+//                    String content = messageNode.path("content").asText();
+//                    System.out.println("Response content: " + content);
+//                    response.close();
+//                    httpClient.close();
+//                    return content;
+//                }
             }
             response.close();
             httpClient.close();
+            return content;
         } catch (Exception e) {
             e.printStackTrace();
         }
