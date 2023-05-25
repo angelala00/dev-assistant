@@ -72,7 +72,7 @@ public class OpenaiTool {
             HttpEntity entity = response.getEntity();
             if (entity != null) {
 
-                if (response.getHeaders("Content-Type")[0].getValue().equals("text/event-stream")){
+                if (response.getHeaders("Content-Type")[0].getValue().contains("text/event-stream")){
                     System.out.println("ok:");
 
 
