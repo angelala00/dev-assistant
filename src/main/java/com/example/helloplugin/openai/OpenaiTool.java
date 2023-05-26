@@ -78,11 +78,11 @@ public class OpenaiTool {
 
 
                     InputStream inputStream = entity.getContent();
-                    try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream))) {
+                    try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"))) {
                         String line;
                         chatContentArea.append("\nassistant:\n");
                         while ((line = bufferedReader.readLine()) != null) {
-//                    System.out.println("::"+line); // 打印每一行数据。你可以将这部分替换为你自己的处理代码。
+                    System.out.println("::"+line); // 打印每一行数据。你可以将这部分替换为你自己的处理代码。
                             line = line.replace("data:","").trim();
                             if (line != null && line != "" && line.startsWith("{")){
                                 ObjectMapper objectMapper = new ObjectMapper();

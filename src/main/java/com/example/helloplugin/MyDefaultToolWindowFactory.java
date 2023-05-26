@@ -109,23 +109,59 @@ public class MyDefaultToolWindowFactory implements ToolWindowFactory {
         // 创建聊天窗口区域的面板，并设置布局
         JPanel chatWindowPanel = new JPanel(new BorderLayout());
 
-        // 聊天内容区域
+// 聊天内容区域
         chatContentArea = new JTextArea();
+        chatContentArea.setLineWrap(true);
+        chatContentArea.setWrapStyleWord(true);
         chatContentArea.setEditable(false);
-        JScrollPane scrollPane = new JBScrollPane(chatContentArea);
-        chatWindowPanel.add(scrollPane, BorderLayout.CENTER);
 
-        // 输入区域
+        JScrollPane scrollPane = new JScrollPane(chatContentArea);
+        scrollPane.setMinimumSize(new Dimension(300, scrollPane.getMinimumSize().height));
+
+// 使用包装 JPanel
+        JPanel chatAreaPanel = new JPanel(new BorderLayout());
+        chatAreaPanel.add(scrollPane, BorderLayout.CENTER);
+        chatWindowPanel.add(chatAreaPanel, BorderLayout.CENTER);
+
+// 输入区域
         inputTextField = new JTextField();
-        chatWindowPanel.add(inputTextField, BorderLayout.SOUTH);
 
-        // 发送按钮
+// 发送按钮
         sendButton = new JButton("->");
 
         JPanel inputPanel = new JPanel(new BorderLayout());
         inputPanel.add(inputTextField, BorderLayout.CENTER);
         inputPanel.add(sendButton, BorderLayout.EAST);
+
         chatWindowPanel.add(inputPanel, BorderLayout.SOUTH);
+
+
+
+//        // 创建聊天窗口区域的面板，并设置布局
+//        JPanel chatWindowPanel = new JPanel(new BorderLayout());
+//
+//        // 聊天内容区域
+//        chatContentArea = new JTextArea();
+//        chatContentArea.setLineWrap(true);
+//        chatContentArea.setWrapStyleWord(true);
+//        chatContentArea.setEditable(false);
+//
+//        JScrollPane scrollPane = new JBScrollPane(chatContentArea);
+//        chatWindowPanel.add(scrollPane, BorderLayout.CENTER);
+//
+//
+//
+//        // 输入区域
+//        inputTextField = new JTextField();
+//        chatWindowPanel.add(inputTextField, BorderLayout.SOUTH);
+//
+//        // 发送按钮
+//        sendButton = new JButton("->");
+//
+//        JPanel inputPanel = new JPanel(new BorderLayout());
+//        inputPanel.add(inputTextField, BorderLayout.CENTER);
+//        inputPanel.add(sendButton, BorderLayout.EAST);
+//        chatWindowPanel.add(inputPanel, BorderLayout.SOUTH);
 
         // 添加发送按钮点击事件
         sendButton.addActionListener(e -> actionMethod.sendMessage(inputTextField, chatContentArea, sendButton, executorService, sessionList, sessionChatMap));

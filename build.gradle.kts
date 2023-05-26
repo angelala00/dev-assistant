@@ -4,7 +4,7 @@ plugins {
 }
 
 group = "dev-assstant"
-version = "1.3-SNAPSHOT"
+version = "1.4-SNAPSHOT"
 
 repositories {
     mavenCentral()
@@ -27,7 +27,7 @@ tasks {
     }
 
     patchPluginXml {
-        sinceBuild.set("213")
+        sinceBuild.set("202")
         untilBuild.set("223.*")
     }
 
