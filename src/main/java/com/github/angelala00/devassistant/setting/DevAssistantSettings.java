@@ -1,4 +1,4 @@
-package com.example.helloplugin.setting;
+package com.github.angelala00.devassistant.setting;
 
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.PersistentStateComponent;

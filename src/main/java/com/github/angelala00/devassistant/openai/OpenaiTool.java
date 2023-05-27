@@ -1,6 +1,6 @@
-package com.example.helloplugin.openai;
+package com.github.angelala00.devassistant.openai;
 
-import com.example.helloplugin.setting.DevAssistantSettings;
+import com.github.angelala00.devassistant.setting.DevAssistantSettings;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.http.HttpEntity;

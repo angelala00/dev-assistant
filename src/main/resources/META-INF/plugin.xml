@@ -25,23 +25,23 @@
     <!-- Extension points defined by the plugin.
          Read more: https://plugins.jetbrains.com/docs/intellij/plugin-extension-points.html -->
     <extensions defaultExtensionNs="com.intellij">
-        <toolWindow factoryClass="com.example.helloplugin.MyDefaultToolWindowFactory" id="DevAssistant" anchor="right"/>
-        <applicationConfigurable id="devAssistantSettings" parentId="tools" displayName="DevAssistant" instance="com.example.helloplugin.setting.DevAssistantSettingsPane" />
-        <applicationService serviceImplementation="com.example.helloplugin.setting.DevAssistantSettings"/>
+        <toolWindow factoryClass="com.github.angelala00.devassistant.MyDefaultToolWindowFactory" id="DevAssistant" anchor="right"/>
+        <applicationConfigurable id="devAssistantSettings" parentId="tools" displayName="DevAssistant" instance="com.github.angelala00.devassistant.setting.DevAssistantSettingsPane" />
+        <applicationService serviceImplementation="com.github.angelala00.devassistant.setting.DevAssistantSettings"/>
     </extensions>
     <actions>
         <group id="DevAssistantEditorPopup">
             <group id="ActionGroup" class="com.intellij.openapi.actionSystem.DefaultActionGroup" text="DevAssistant" description="DevAssistantDesc" popup="true">
-                <action id="MyPluginAction4" class="com.example.helloplugin.actions.MyPluginAction1" text="优化代码"/>
-                <action id="MyPluginAction5" class="com.example.helloplugin.actions.MyPluginAction2" text="找Bug"/>
-                <action id="MyPluginAction6" class="com.example.helloplugin.actions.MyPluginAction3" text="写单测"/>
+                <action id="MyPluginAction4" class="com.github.angelala00.devassistant.actions.MyPluginAction1" text="优化代码"/>
+                <action id="MyPluginAction5" class="com.github.angelala00.devassistant.actions.MyPluginAction2" text="找Bug"/>
+                <action id="MyPluginAction6" class="com.github.angelala00.devassistant.actions.MyPluginAction3" text="写单测"/>
                 <separator/>
             </group>
             <add-to-group group-id="EditorPopupMenu1" anchor="first" />
             <separator/>
         </group>
         <action id="com.example.helloplugin.ToggleToolWindow"
-                class="com.example.helloplugin.actions.ToggleToolWindowAction"
+                class="com.github.angelala00.devassistant.actions.ToggleToolWindowAction"
                 text="Toggle DevAssistant ToolWindow"
                 description="Toggle the visibility of the DevAssistant ToolWindow">
             <keyboard-shortcut keymap="$default" first-keystroke="control L"/>

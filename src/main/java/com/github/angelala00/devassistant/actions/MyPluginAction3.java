@@ -1,4 +1,4 @@
-package com.example.helloplugin.actions;
+package com.github.angelala00.devassistant.actions;
 
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;

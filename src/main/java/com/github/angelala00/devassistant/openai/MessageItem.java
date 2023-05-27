@@ -1,4 +1,4 @@
-package com.example.helloplugin.openai;
+package com.github.angelala00.devassistant.openai;
 
 public class MessageItem {
     public MessageItem(String role, String content) {

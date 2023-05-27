@@ -1,6 +1,6 @@
-package com.example.helloplugin;
+package com.github.angelala00.devassistant;
 
-import com.example.helloplugin.openai.MessageItem;
+import com.github.angelala00.devassistant.openai.MessageItem;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowFactory;

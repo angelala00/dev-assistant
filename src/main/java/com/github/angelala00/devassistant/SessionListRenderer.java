@@ -1,6 +1,6 @@
-package com.example.helloplugin;
+package com.github.angelala00.devassistant;
 
-import com.example.helloplugin.openai.MessageItem;
+import com.github.angelala00.devassistant.openai.MessageItem;
 
 import javax.swing.*;
 import java.awt.*;

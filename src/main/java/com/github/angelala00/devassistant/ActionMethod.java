@@ -1,7 +1,7 @@
-package com.example.helloplugin;
+package com.github.angelala00.devassistant;
 
-import com.example.helloplugin.openai.MessageItem;
-import com.example.helloplugin.openai.OpenaiTool;
+import com.github.angelala00.devassistant.openai.MessageItem;
+import com.github.angelala00.devassistant.openai.OpenaiTool;
 
 import javax.swing.*;
 import java.util.ArrayList;

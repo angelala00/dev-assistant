@@ -1,4 +1,4 @@
-package com.example.helloplugin.openai;
+package com.github.angelala00.devassistant.openai;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

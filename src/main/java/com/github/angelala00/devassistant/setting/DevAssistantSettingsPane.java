@@ -1,4 +1,4 @@
-package com.example.helloplugin.setting;
+package com.github.angelala00.devassistant.setting;
 
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.SearchableConfigurable;
