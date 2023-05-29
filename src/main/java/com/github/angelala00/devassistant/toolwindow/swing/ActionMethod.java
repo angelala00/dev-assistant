@@ -1,4 +1,4 @@
-package com.github.angelala00.devassistant;
+package com.github.angelala00.devassistant.toolwindow.swing;
 
 import com.github.angelala00.devassistant.openai.MessageItem;
 import com.github.angelala00.devassistant.openai.OpenaiTool;

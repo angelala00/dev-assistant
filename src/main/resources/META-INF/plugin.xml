@@ -25,7 +25,7 @@
     <!-- Extension points defined by the plugin.
          Read more: https://plugins.jetbrains.com/docs/intellij/plugin-extension-points.html -->
     <extensions defaultExtensionNs="com.intellij">
-        <toolWindow factoryClass="com.github.angelala00.devassistant.MyDefaultToolWindowFactory" id="DevAssistant" anchor="right"/>
+        <toolWindow factoryClass="com.github.angelala00.devassistant.toolwindow.html.MyDefaultToolWindowFactory" id="DevAssistant" anchor="right"/>
         <applicationConfigurable id="devAssistantSettings" parentId="tools" displayName="DevAssistant" instance="com.github.angelala00.devassistant.setting.DevAssistantSettingsPane" />
         <applicationService serviceImplementation="com.github.angelala00.devassistant.setting.DevAssistantSettings"/>
     </extensions>

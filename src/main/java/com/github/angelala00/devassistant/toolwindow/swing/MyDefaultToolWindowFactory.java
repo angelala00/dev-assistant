@@ -1,6 +1,7 @@
-package com.github.angelala00.devassistant;
+package com.github.angelala00.devassistant.toolwindow.swing;
 
 import com.github.angelala00.devassistant.openai.MessageItem;
+import com.github.angelala00.devassistant.storage.Storage;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowFactory;
@@ -15,7 +16,6 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -25,7 +25,6 @@ public class MyDefaultToolWindowFactory implements ToolWindowFactory {
     private JTextArea chatContentArea;
     private JTextField inputTextField;
     private JButton sendButton;
-    private Map<String, ArrayList<MessageItem>> sessionChatMap;
     private ActionMethod actionMethod;
 
     @Override
@@ -34,7 +33,7 @@ public class MyDefaultToolWindowFactory implements ToolWindowFactory {
         actionMethod = new ActionMethod();
         // 创建一个面板，并设置布局
         JPanel panel = new JPanel(new BorderLayout());
-        sessionChatMap = new HashMap<>();
+        Storage.sessionChatMap = new HashMap<>();
         // 创建左边的会话列表区域
         JPanel sessionListPanel = createSessionListPanel();
         panel.add(sessionListPanel, BorderLayout.WEST);
@@ -72,7 +71,7 @@ public class MyDefaultToolWindowFactory implements ToolWindowFactory {
         int preferredWidth = 20; // 修改这个值以调整会话列表的首选宽度
         sessionList.setPrototypeCellValue(String.format("%" + preferredWidth + "s", ""));
 
-        sessionList.setCellRenderer(new SessionListRenderer(sessionList, sessionChatMap));
+        sessionList.setCellRenderer(new SessionListRenderer(sessionList, Storage.sessionChatMap));
         sessionList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         sessionListPanel.add(new JBScrollPane(sessionList), BorderLayout.CENTER);
 
@@ -81,7 +80,7 @@ public class MyDefaultToolWindowFactory implements ToolWindowFactory {
             String chatName = "Chat" + (listModel.getSize() + 1);
             listModel.addElement(chatName);
             sessionList.setSelectedValue(chatName, true);
-            sessionChatMap.put(chatName, new ArrayList<MessageItem>());
+            Storage.sessionChatMap.put(chatName, new ArrayList<MessageItem>());
         });
 
         // 添加会话列表选中事件
@@ -92,7 +91,7 @@ public class MyDefaultToolWindowFactory implements ToolWindowFactory {
                 if (selectedIndex >= 0) {
                     String selectedSession = sessionList.getModel().getElementAt(selectedIndex);
                     content = selectedSession + ":";
-                    ArrayList<MessageItem> messageItems = sessionChatMap.get(selectedSession);
+                    ArrayList<MessageItem> messageItems = Storage.sessionChatMap.get(selectedSession);
                     if (messageItems != null) {
                         for (MessageItem messageItem : messageItems) {
                             content += actionMethod.renderSingleMessageItem(messageItem);
@@ -106,72 +105,40 @@ public class MyDefaultToolWindowFactory implements ToolWindowFactory {
     }
 
     private JPanel createChatWindowPanel() {
+
         // 创建聊天窗口区域的面板，并设置布局
         JPanel chatWindowPanel = new JPanel(new BorderLayout());
 
-// 聊天内容区域
+        // 聊天内容区域
         chatContentArea = new JTextArea();
         chatContentArea.setLineWrap(true);
         chatContentArea.setWrapStyleWord(true);
         chatContentArea.setEditable(false);
 
-        JScrollPane scrollPane = new JScrollPane(chatContentArea);
-        scrollPane.setMinimumSize(new Dimension(300, scrollPane.getMinimumSize().height));
+        JScrollPane scrollPane = new JBScrollPane(chatContentArea);
 
-// 使用包装 JPanel
-        JPanel chatAreaPanel = new JPanel(new BorderLayout());
-        chatAreaPanel.add(scrollPane, BorderLayout.CENTER);
-        chatWindowPanel.add(chatAreaPanel, BorderLayout.CENTER);
 
-// 输入区域
+
+        chatWindowPanel.add(scrollPane, BorderLayout.CENTER);
+
+        // 输入区域
         inputTextField = new JTextField();
-
-// 发送按钮
+        // 发送按钮
         sendButton = new JButton("->");
-
         JPanel inputPanel = new JPanel(new BorderLayout());
         inputPanel.add(inputTextField, BorderLayout.CENTER);
         inputPanel.add(sendButton, BorderLayout.EAST);
-
         chatWindowPanel.add(inputPanel, BorderLayout.SOUTH);
 
-
-
-//        // 创建聊天窗口区域的面板，并设置布局
-//        JPanel chatWindowPanel = new JPanel(new BorderLayout());
-//
-//        // 聊天内容区域
-//        chatContentArea = new JTextArea();
-//        chatContentArea.setLineWrap(true);
-//        chatContentArea.setWrapStyleWord(true);
-//        chatContentArea.setEditable(false);
-//
-//        JScrollPane scrollPane = new JBScrollPane(chatContentArea);
-//        chatWindowPanel.add(scrollPane, BorderLayout.CENTER);
-//
-//
-//
-//        // 输入区域
-//        inputTextField = new JTextField();
-//        chatWindowPanel.add(inputTextField, BorderLayout.SOUTH);
-//
-//        // 发送按钮
-//        sendButton = new JButton("->");
-//
-//        JPanel inputPanel = new JPanel(new BorderLayout());
-//        inputPanel.add(inputTextField, BorderLayout.CENTER);
-//        inputPanel.add(sendButton, BorderLayout.EAST);
-//        chatWindowPanel.add(inputPanel, BorderLayout.SOUTH);
-
         // 添加发送按钮点击事件
-        sendButton.addActionListener(e -> actionMethod.sendMessage(inputTextField, chatContentArea, sendButton, executorService, sessionList, sessionChatMap));
+        sendButton.addActionListener(e -> actionMethod.sendMessage(inputTextField, chatContentArea, sendButton, executorService, sessionList, Storage.sessionChatMap));
 
         // 添加输入区域按键事件
         inputTextField.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-                    actionMethod.sendMessage(inputTextField, chatContentArea, sendButton, executorService, sessionList, sessionChatMap);
+                    actionMethod.sendMessage(inputTextField, chatContentArea, sendButton, executorService, sessionList, Storage.sessionChatMap);
                 }
             }
         });
